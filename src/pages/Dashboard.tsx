@@ -107,22 +107,40 @@ function SaldoPrevisto({ r }: { r: Resumo }) {
       </div>
 
       {modoHoje ? (
-        <div className="saldo-main">
-          <Money value={sobra} size="xl" className={sobra < 0 ? 'neg' : ''} />
-          <div className="saldo-note">
-            <div className="conta-hoje small">
-              <span className="muted">Disponível hoje</span> <b>{brl(disponivel)}</b>
-              <span className="muted"> − falta pagar</span> <b>{brl(faltaPagar)}</b>
+        <div className="saldo-hoje">
+          <div className="saldo-destaque">
+            <Money value={sobra} size="xl" className={sobra < 0 ? 'neg' : ''} />
+            <div className="muted small">o que já foi pago já saiu do seu saldo</div>
+          </div>
+          <div className="saldo-conta">
+            <div className="saldo-linha">
+              <span className="muted">Disponível hoje</span>
+              <b>{brl(disponivel)}</b>
             </div>
-            <div className="muted small">o que já foi pago (contas e faturas) já saiu do seu saldo</div>
+            <div className="saldo-linha">
+              <span className="muted">Falta pagar</span>
+              <b>− {brl(faltaPagar)}</b>
+            </div>
+            <div className="saldo-linha total">
+              <span>Sobra</span>
+              <b className={sobra >= 0 ? 'pos' : 'neg'}>{brl(sobra)}</b>
+            </div>
             {aReceber > 0.005 && (
-              <div className="small a-receber">
-                <b className="pos">+ {brl(aReceber)}</b> a receber
-                {pendentesReceita.length === 1
-                  ? <> ({pendentesReceita[0].descricao}, dia {Number(pendentesReceita[0].data.slice(8))})</>
-                  : <> ({pendentesReceita.length} entradas)</>}
-                <span className="muted"> · depois disso: </span>
-                <b className={depois >= 0 ? 'pos' : 'neg'}>{brl(depois)}</b>
+              <div className="saldo-receber">
+                <div className="saldo-linha">
+                  <span>
+                    <b className="pos">+ {brl(aReceber)}</b> a receber
+                    <span className="tiny muted saldo-receber-de">
+                      {pendentesReceita.length === 1
+                        ? `${pendentesReceita[0].descricao} · dia ${Number(pendentesReceita[0].data.slice(8))}`
+                        : `${pendentesReceita.length} entradas`}
+                    </span>
+                  </span>
+                </div>
+                <div className="saldo-linha">
+                  <span className="muted">Depois disso</span>
+                  <b className={depois >= 0 ? 'pos' : 'neg'}>{brl(depois)}</b>
+                </div>
               </div>
             )}
           </div>
